@@ -1,0 +1,10 @@
+{
+  "name": "@innovatech/ui-capacity-form",
+  "version": "1.0.0",
+  "description": "Formulario compuesto para recursos y capacidad",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  }
+}

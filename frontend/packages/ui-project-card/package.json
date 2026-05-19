@@ -1,0 +1,10 @@
+{
+  "name": "@innovatech/ui-project-card",
+  "version": "1.0.0",
+  "description": "Tarjeta de proyecto Innovatech",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  }
+}
