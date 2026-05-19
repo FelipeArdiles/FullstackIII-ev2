@@ -1,0 +1,75 @@
+:root {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.5;
+  color: #1a1a2e;
+  background: #f0f4f8;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+.app-header {
+  background: linear-gradient(135deg, #0f3460, #16213e);
+  color: #fff;
+  padding: 1.5rem 2rem;
+}
+.app-header h1 { margin: 0; font-size: 1.5rem; }
+main { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+@media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+.panel {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+.panel h2 { margin-top: 0; font-size: 1.1rem; color: #0f3460; }
+form { display: flex; flex-direction: column; gap: 0.75rem; }
+input, select, textarea {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+.innovatech-btn {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.innovatech-btn--primary { background: #0f3460; color: #fff; }
+.innovatech-btn--secondary { background: #e2e8f0; color: #1a1a2e; }
+.project-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.project-card:hover, .project-card.selected { border-color: #0f3460; }
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.badge--planned { background: #dbeafe; color: #1e40af; }
+.badge--in_progress { background: #fef3c7; color: #92400e; }
+.badge--completed { background: #d1fae5; color: #065f46; }
+.member-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+.capacity-bar {
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 0.25rem;
+}
+.capacity-bar-fill { height: 100%; background: #10b981; }
+.error { color: #dc2626; font-size: 0.9rem; }
