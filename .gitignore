@@ -1,0 +1,42 @@
+# Documentos de contexto / instrucciones (no subir a GitHub)
+*.pdf
+*.docx
+*.doc
+
+# Entorno Python local para extracción de documentos
+.venv/
+
+# Node
+node_modules/
+dist/
+build/
+.npm
+*.log
+
+# Java / Maven
+target/
+*.class
+*.jar
+!**/src/main/**
+!**/src/test/**
+.idea/
+*.iml
+.settings/
+.project
+.classpath
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+*.swp
+
+# H2 / logs
+*.db
+logs/
+
+# Coverage
+coverage/
+.nyc_output/
