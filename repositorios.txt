@@ -1,0 +1,13 @@
+Repositorio principal (monorepo)
+https://github.com/FelipeArdiles/FullstackIII-ev2
+Contiene todos los componentes: arquetipos, backend, frontend y documentación.
+
+Componentes (rutas dentro del monorepo)
+- Arquetipos Maven: /archetypes/innovatech-ms-archetype y /archetypes/innovatech-bff-archetype
+- Microservicio Proyectos: /backend/ms-proyectos
+- Microservicio Recursos: /backend/ms-recursos
+- BFF: /backend/bff
+- Paquetes NPM: /frontend/packages/ui-button, ui-project-card, ui-capacity-form
+- App React: /frontend/app/innovatech-web
+
+Nota: La evaluación permite repositorios separados por componente; este proyecto usa monorepo con carpetas independientes y README por módulo para facilitar la entrega académica individual.
