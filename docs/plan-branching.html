@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>Plan Branching</title>
+<style>
+body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; line-height: 1.5; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #ccc; padding: 0.4rem; }
+h1 { color: #0f3460; }
+</style></head><body><h1>Plan de Branching – Git Flow</h1>
+<h2>Estrategia elegida</h2>
+<p><strong>Git Flow</strong> (descartadas GitHub Flow simple y trunk-based para esta entrega EV2).</p>
+<p>Se adopta Git Flow porque la evaluación exige <strong>más de una rama visible en GitHub</strong> y un flujo formal de integración (<code>develop</code>) separado de producción (<code>main</code>).</p>
+<h2>Ramas</h2>
+<table>
+<thead>
+<tr>
+<th>Rama</th>
+<th>Propósito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>main</code></td>
+<td>Código estable en producción / entrega final</td>
+</tr>
+<tr>
+<td><code>develop</code></td>
+<td>Integración continua de features aprobadas</td>
+</tr>
+<tr>
+<td><code>feature/*</code></td>
+<td>Desarrollo por tarea (docs, UI, microservicios, etc.)</td>
+</tr>
+<tr>
+<td><code>release/*</code></td>
+<td>Preparación de versión antes de merge a <code>main</code> (opcional en EV2)</td>
+</tr>
+<tr>
+<td><code>hotfix/*</code></td>
+<td>Correcciones urgentes desde <code>main</code> (reservado)</td>
+</tr>
+</tbody>
+</table>
+<h2>Flujo de trabajo</h2>
+<ol>
+<li>Crear <code>develop</code> desde <code>main</code> (una sola vez).</li>
+<li>Por cada tarea: <code>git checkout develop &amp;&amp; git checkout -b feature/nombre-tarea</code></li>
+<li>Commits atómicos en la rama <code>feature/*</code></li>
+<li>Merge <code>feature/*</code> → <code>develop</code> (local o PR en GitHub)</li>
+<li>Cuando <code>develop</code> está estable: merge <code>develop</code> → <code>main</code> (o rama <code>release/x.y.z</code> → <code>main</code> + back-merge a <code>develop</code>)</li>
+</ol>
+<h2>Ramas en este repositorio (GitHub)</h2>
+<table>
+<thead>
+<tr>
+<th>Rama</th>
+<th>Estado</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>main</code></td>
+<td>Activa</td>
+<td>Entregable estable EV2</td>
+</tr>
+<tr>
+<td><code>develop</code></td>
+<td>Activa</td>
+<td>Integración de features</td>
+</tr>
+<tr>
+<td><code>feature/branching-docs</code></td>
+<td>Mergeada a <code>develop</code></td>
+<td>Documentación Git Flow</td>
+</tr>
+<tr>
+<td><code>feature/ui-redesign</code></td>
+<td>Mergeada a <code>develop</code></td>
+<td>Rediseño UI Innovatech Web</td>
+</tr>
+</tbody>
+</table>
+<h2>Evidencia de commits por feature</h2>
+<ul>
+<li><code>feature/branching-docs</code>: actualización de este plan y README</li>
+<li><code>feature/ui-redesign</code>: dashboard, dark mode, estados vacíos/carga, toasts</li>
+</ul>
+<h2>Gestión de conflictos</h2>
+<ul>
+<li>Resolver siempre en la rama <code>feature</code> antes del merge a <code>develop</code></li>
+<li>Documentar resolución en el mensaje de merge si hubo conflictos</li>
+</ul>
+<h3>Ejemplo documentado: merge con conflicto en README</h3>
+<p>Simulación académica (solo documentación; comandos reales usados en EV2):</p>
+<pre><code class="language-bash"># 1. Rama feature desde develop
+git checkout develop
+git pull origin develop
+git checkout -b feature/ev2-rubric-completion
+
+# 2. En develop se añade una línea al README (otro integrante)
+git checkout develop
+echo &quot;- Nota integración develop&quot; &gt;&gt; README.md
+git add README.md &amp;&amp; git commit -m &quot;docs: nota en develop&quot;
+
+# 3. En feature se edita la misma zona del README
+git checkout feature/ev2-rubric-completion
+echo &quot;- Nota feature EV2&quot; &gt;&gt; README.md
+git add README.md &amp;&amp; git commit -m &quot;docs: nota en feature&quot;
+
+# 4. Merge develop → feature produce conflicto
+git merge develop
+# Auto-merging README.md
+# CONFLICT (content): Merge conflict in README.md
+
+# 5. Resolver manualmente (editar marcadores &lt;&lt;&lt;&lt;&lt;&lt;&lt; ======= &gt;&gt;&gt;&gt;&gt;&gt;&gt;)
+git add README.md
+git commit -m &quot;merge: resolver conflicto README entre develop y feature&quot;
+
+# 6. Integrar feature en develop
+git checkout develop
+git merge feature/ev2-rubric-completion
+git push origin develop
+</code></pre>
+<p><strong>Resolución típica:</strong> conservar ambas líneas en el README y eliminar los marcadores de conflicto. Nunca hacer merge a <code>develop</code> con conflictos sin resolver.</p>
+<h2>Por qué no GitHub Flow solo</h2>
+<p>GitHub Flow con una sola rama <code>main</code> y <code>feature/*</code> no cumple el requisito académico de <strong>múltiples ramas persistentes</strong> (<code>develop</code>, features visibles en remoto).</p>
+<h2>Por qué no trunk-based</h2>
+<p>Requiere CI/CD continuo y feature flags; el alcance EV2 prioriza patrones de diseño y microservicios con pruebas unitarias básicas.</p></body></html>

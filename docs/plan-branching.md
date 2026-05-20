@@ -43,6 +43,43 @@ Se adopta Git Flow porque la evaluación exige **más de una rama visible en Git
 - Resolver siempre en la rama `feature` antes del merge a `develop`
 - Documentar resolución en el mensaje de merge si hubo conflictos
 
+### Ejemplo documentado: merge con conflicto en README
+
+Simulación académica (solo documentación; comandos reales usados en EV2):
+
+```bash
+# 1. Rama feature desde develop
+git checkout develop
+git pull origin develop
+git checkout -b feature/ev2-rubric-completion
+
+# 2. En develop se añade una línea al README (otro integrante)
+git checkout develop
+echo "- Nota integración develop" >> README.md
+git add README.md && git commit -m "docs: nota en develop"
+
+# 3. En feature se edita la misma zona del README
+git checkout feature/ev2-rubric-completion
+echo "- Nota feature EV2" >> README.md
+git add README.md && git commit -m "docs: nota en feature"
+
+# 4. Merge develop → feature produce conflicto
+git merge develop
+# Auto-merging README.md
+# CONFLICT (content): Merge conflict in README.md
+
+# 5. Resolver manualmente (editar marcadores <<<<<<< ======= >>>>>>>)
+git add README.md
+git commit -m "merge: resolver conflicto README entre develop y feature"
+
+# 6. Integrar feature en develop
+git checkout develop
+git merge feature/ev2-rubric-completion
+git push origin develop
+```
+
+**Resolución típica:** conservar ambas líneas en el README y eliminar los marcadores de conflicto. Nunca hacer merge a `develop` con conflictos sin resolver.
+
 ## Por qué no GitHub Flow solo
 
 GitHub Flow con una sola rama `main` y `feature/*` no cumple el requisito académico de **múltiples ramas persistentes** (`develop`, features visibles en remoto).
