@@ -13,7 +13,12 @@ public class ProjectClientAdapter {
     private final RestClient restClient;
 
     public ProjectClientAdapter(@Value("${services.proyectos.url}") String baseUrl) {
-        this.restClient = RestClient.builder().baseUrl(baseUrl).build();
+        this(RestClient.builder().baseUrl(baseUrl).build());
+    }
+
+    /** Constructor para pruebas unitarias con RestClient inyectado. */
+    ProjectClientAdapter(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     public boolean projectExists(Long projectId) {

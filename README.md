@@ -117,6 +117,24 @@ cd backend/ms-proyectos && mvn test
 cd backend/ms-recursos && mvn test
 cd backend/bff && mvn test
 cd frontend/packages/ui-project-card && npm test
+cd frontend/packages/ui-button && npm test
+cd frontend/app/innovatech-web && npm test
+```
+
+## Cobertura de código (JaCoCo)
+
+Cada backend Maven genera reporte HTML tras `mvn test`:
+
+| Módulo | Reporte |
+|--------|---------|
+| ms-proyectos | `backend/ms-proyectos/target/site/jacoco/index.html` |
+| ms-recursos | `backend/ms-recursos/target/site/jacoco/index.html` |
+| bff | `backend/bff/target/site/jacoco/index.html` |
+
+```bash
+cd backend/ms-proyectos && mvn test jacoco:report
+cd backend/ms-recursos && mvn test jacoco:report
+cd backend/bff && mvn test jacoco:report
 ```
 
 ## Autor
