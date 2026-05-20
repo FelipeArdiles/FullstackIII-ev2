@@ -13,16 +13,19 @@ Plataforma de gestión integral de proyectos tecnológicos (Evaluación Parcial 
 | Paquetes NPM | `frontend/packages/*` | — |
 | Arquetipos Maven | `archetypes/*` | — |
 
-## Estrategia de branching: GitHub Flow
+## Estrategia de branching: Git Flow
 
-Se eligió **GitHub Flow** frente a Git Flow o trunk-based porque:
+Se adoptó **Git Flow** para cumplir el requisito EV2 de **múltiples ramas visibles en GitHub**:
 
-- El equipo académico trabaja en iteraciones cortas hacia `main`.
-- Cada funcionalidad se desarrolla en ramas `feature/*` con PR/merge a `main`.
-- `main` permanece siempre desplegable (entrega EV2).
-- Menor complejidad que Git Flow (sin ramas `release`/`hotfix` obligatorias para este alcance).
+| Rama | Uso |
+|------|-----|
+| `main` | Código estable / entrega |
+| `develop` | Integración de features |
+| `feature/*` | Tareas (docs, UI, backend, etc.) |
 
-Flujo: `main` → `feature/<tarea>` → merge → `main`.
+Flujo: `main` → `develop` → `feature/<tarea>` → merge a `develop` → merge a `main`.
+
+Ramas remotas: [github.com/FelipeArdiles/FullstackIII-ev2/branches](https://github.com/FelipeArdiles/FullstackIII-ev2/branches)
 
 Detalle en [docs/plan-branching.md](docs/plan-branching.md).
 
