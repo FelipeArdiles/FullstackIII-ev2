@@ -72,6 +72,9 @@ El frontend sirve la SPA en el puerto **5173** y hace proxy de `/api` al BFF den
 - Puerto ocupado: detener procesos locales en 8080–8082 o 5173, o cambiar el mapeo en `docker-compose.yml`.
 - BFF no arranca: esperar healthchecks de los MS (`docker compose ps`).
 - Rebuild limpio: `docker compose down -v && docker compose up --build`.
+- **Apple Silicon (Mac M1/M2/M3, arm64):** los Dockerfiles usan imágenes con soporte `linux/arm64` y `linux/amd64` (`eclipse-temurin:17-jre`, `maven:3.9-eclipse-temurin-17`, `node:18-alpine`, `nginx:alpine`). Evita variantes `*-alpine` de Temurin en runtime Java; no suelen publicar manifiesto arm64. Si ves `no matching manifest for linux/arm64`, actualiza el repo y reconstruye: `docker compose build --no-cache`.
+- **Windows / Linux x86_64 (amd64):** el mismo `docker compose up --build` descarga capas amd64 automáticamente. No hace falta `platform: linux/amd64` salvo que quieras forzar emulación en Mac (más lento).
+- Verificar arquitectura de una imagen: `docker image inspect eclipse-temurin:17-jre --format '{{.Architecture}}'`.
 
 ## Ejecución rápida (local sin Docker)
 

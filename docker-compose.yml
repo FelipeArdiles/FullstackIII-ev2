@@ -1,3 +1,5 @@
+# Imágenes base multi-arch (linux/amd64, linux/arm64). No forzar platform salvo
+# depuración; en Apple Silicon se usa arm64 nativo, en PCs x86_64/amd64.
 services:
   ms-proyectos:
     build:
