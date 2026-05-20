@@ -46,7 +46,34 @@ Documentación: [docs/patrones-arquetipos.md](docs/patrones-arquetipos.md).
 - Maven 3.9+
 - Node.js 18+
 
-## Ejecución rápida
+## Ejecución con Docker Compose
+
+Requisito: [Docker](https://docs.docker.com/get-docker/) y Docker Compose v2.
+
+```bash
+# Desde la raíz del repositorio
+docker compose up --build
+
+# Alternativa con script
+chmod +x start.sh && ./start.sh
+```
+
+| Servicio | URL en el host |
+|----------|----------------|
+| Frontend (React + nginx) | http://localhost:5173 |
+| BFF | http://localhost:8080 |
+| ms-proyectos | http://localhost:8081 |
+| ms-recursos | http://localhost:8082 |
+
+El frontend sirve la SPA en el puerto **5173** y hace proxy de `/api` al BFF dentro de la red Docker. El BFF se conecta a los microservicios por hostname (`ms-proyectos`, `ms-recursos`). Las bases H2 siguen en memoria dentro de cada MS.
+
+**Troubleshooting breve**
+
+- Puerto ocupado: detener procesos locales en 8080–8082 o 5173, o cambiar el mapeo en `docker-compose.yml`.
+- BFF no arranca: esperar healthchecks de los MS (`docker compose ps`).
+- Rebuild limpio: `docker compose down -v && docker compose up --build`.
+
+## Ejecución rápida (local sin Docker)
 
 ### Backend
 
