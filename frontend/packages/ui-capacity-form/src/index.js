@@ -1,16 +1,27 @@
 /**
  * Patrón Composite: formulario compuesto por campos validables.
  */
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export class FormField {
-  constructor(name, required = true) {
+  constructor(name, required = true, type = 'text') {
     this.name = name;
     this.required = required;
+    this.type = type;
     this.value = '';
+    this.minLength = type === 'text' ? 2 : 0;
   }
   setValue(v) { this.value = v; }
   validate() {
-    if (this.required && !String(this.value).trim()) {
+    const trimmed = String(this.value).trim();
+    if (this.required && !trimmed) {
       return { valid: false, error: `${this.name} es obligatorio` };
+    }
+    if (trimmed && this.minLength > 0 && trimmed.length < this.minLength) {
+      return { valid: false, error: `${this.name} debe tener al menos ${this.minLength} caracteres` };
+    }
+    if (this.type === 'email' && trimmed && !EMAIL_RE.test(trimmed)) {
+      return { valid: false, error: 'Email inválido' };
     }
     return { valid: true };
   }

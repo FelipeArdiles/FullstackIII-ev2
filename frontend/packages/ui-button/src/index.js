@@ -12,3 +12,4 @@ export function createButton({ label, variant = 'primary', onClick, disabled = f
 }
 
 export const variants = ['primary', 'secondary', 'danger'];
+export { Button } from './Button.js';

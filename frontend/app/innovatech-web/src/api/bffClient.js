@@ -37,3 +37,19 @@ export async function createMember(data) {
   if (!res.ok) throw new Error('Error al crear miembro');
   return res.json();
 }
+
+export async function updateProject(id, data) {
+  const res = await fetch(`${BASE}/projects/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error('Error al actualizar proyecto');
+  return res.json();
+}
+
+export async function fetchTasksStub() {
+  const res = await fetch(`${BASE}/tasks`);
+  if (!res.ok) return [];
+  return res.json();
+}

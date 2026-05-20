@@ -1,8 +1,18 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ProjectSelectionSubject } from '@innovatech/ui-project-card';
 import { CompositeForm, FormField, capacityBadge } from '@innovatech/ui-capacity-form';
-import { fetchProjects, fetchMembers, fetchProjectDetail, createProject, createMember } from './api/bffClient';
+import { Button } from '@innovatech/ui-button';
+import {
+  fetchProjects,
+  fetchMembers,
+  fetchProjectDetail,
+  fetchTasksStub,
+  createProject,
+  createMember,
+  updateProject
+} from './api/bffClient';
 import Dashboard from './components/Dashboard';
+import ProjectDetailPanel from './components/ProjectDetailPanel';
 import ToastStack from './components/ToastStack';
 import { useTheme } from './hooks/useTheme';
 import { useToast } from './hooks/useToast';
@@ -21,8 +31,11 @@ export default function App() {
   const { toasts, push: toast, dismiss } = useToast();
   const [projects, setProjects] = useState([]);
   const [members, setMembers] = useState([]);
+  const [tasksStub, setTasksStub] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [detail, setDetail] = useState(null);
+  const [editForm, setEditForm] = useState({ name: '', description: '' });
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('ALL');
@@ -33,9 +46,10 @@ export default function App() {
     setLoading(true);
     try {
       setError('');
-      const [p, m] = await Promise.all([fetchProjects(), fetchMembers()]);
+      const [p, m, t] = await Promise.all([fetchProjects(), fetchMembers(), fetchTasksStub()]);
       setProjects(p);
       setMembers(m);
+      setTasksStub(t);
     } catch (e) {
       setError(e.message);
       toast(e.message, 'error');
@@ -52,6 +66,10 @@ export default function App() {
         try {
           const d = await fetchProjectDetail(id);
           setDetail(d);
+          setEditForm({
+            name: d.project?.name || '',
+            description: d.project?.description || ''
+          });
         } catch {
           setDetail(null);
         }
@@ -65,6 +83,11 @@ export default function App() {
     if (statusFilter === 'ALL') return projects;
     return projects.filter((p) => (p.status || '').toUpperCase() === statusFilter);
   }, [projects, statusFilter]);
+
+  const membersByProject = useMemo(() => {
+    if (!selectedId) return [];
+    return members.filter((m) => (m.projectIds || []).includes(selectedId));
+  }, [members, selectedId]);
 
   const handleCreateProject = async (e) => {
     e.preventDefault();
@@ -95,7 +118,7 @@ export default function App() {
     const form = new CompositeForm([
       Object.assign(new FormField('name'), { value: memberForm.name }),
       Object.assign(new FormField('role'), { value: memberForm.role }),
-      Object.assign(new FormField('email'), { value: memberForm.email })
+      Object.assign(new FormField('email', true, 'email'), { value: memberForm.email })
     ]);
     const validation = form.validate();
     if (!validation.valid) {
@@ -115,6 +138,35 @@ export default function App() {
     }
   };
 
+  const handleSaveProject = async (e) => {
+    e.preventDefault();
+    if (!selectedId) return;
+    const form = new CompositeForm([
+      Object.assign(new FormField('name'), { value: editForm.name }),
+      Object.assign(new FormField('description'), { value: editForm.description })
+    ]);
+    const validation = form.validate();
+    if (!validation.valid) {
+      toast(validation.errors.join(', '), 'error');
+      return;
+    }
+    setSaving(true);
+    try {
+      await updateProject(selectedId, {
+        name: editForm.name,
+        description: editForm.description
+      });
+      toast('Proyecto actualizado', 'success');
+      await load();
+      const d = await fetchProjectDetail(selectedId);
+      setDetail(d);
+    } catch (err) {
+      toast(err.message, 'error');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <div className="app-shell">
       <header className="app-header">
@@ -126,9 +178,7 @@ export default function App() {
           </div>
         </div>
         <nav className="header-actions">
-          <button type="button" className="theme-toggle" onClick={toggleTheme} aria-pressed={dark}>
-            {dark ? 'Modo claro' : 'Modo oscuro'}
-          </button>
+          <Button variant="secondary" label={dark ? 'Modo claro' : 'Modo oscuro'} onClick={toggleTheme} />
         </nav>
       </header>
 
@@ -163,7 +213,7 @@ export default function App() {
                     onChange={(e) => setProjectForm({ ...projectForm, name: e.target.value })} />
                   <textarea placeholder="Descripción *" rows={2} value={projectForm.description}
                     onChange={(e) => setProjectForm({ ...projectForm, description: e.target.value })} />
-                  <button type="submit" className="innovatech-btn innovatech-btn--primary">Crear proyecto</button>
+                  <Button type="submit" variant="primary" label="Crear proyecto" />
                 </form>
                 {filteredProjects.length === 0 ? (
                   <p className="empty-state">No hay proyectos con este filtro. Crea uno nuevo arriba.</p>
@@ -196,12 +246,17 @@ export default function App() {
                     onChange={(e) => setMemberForm({ ...memberForm, role: e.target.value })} />
                   <input placeholder="Email *" type="email" value={memberForm.email}
                     onChange={(e) => setMemberForm({ ...memberForm, email: e.target.value })} />
-                  <button type="submit" className="innovatech-btn innovatech-btn--secondary">Registrar miembro</button>
+                  <Button type="submit" variant="secondary" label="Registrar miembro" />
                 </form>
+                {selectedId && membersByProject.length > 0 && (
+                  <p className="member-filter-hint">
+                    Mostrando {membersByProject.length} miembro(s) del proyecto seleccionado
+                  </p>
+                )}
                 {members.length === 0 ? (
                   <p className="empty-state">Sin miembros registrados. Agrega el primero con el formulario.</p>
                 ) : (
-                  members.map((m) => {
+                  (selectedId ? membersByProject : members).map((m) => {
                     const cap = capacityBadge(m.availableCapacityPercent ?? 0);
                     return (
                       <div key={m.id} className="member-row">
@@ -224,11 +279,26 @@ export default function App() {
             </div>
 
             {detail && (
-              <section className="panel detail-panel">
-                <h2>Detalle del proyecto (BFF)</h2>
-                <p><strong>{detail.project?.name}</strong></p>
-                <p>Capacidad promedio del equipo: <strong>{detail.averageCapacityPercent?.toFixed(1)}%</strong></p>
-                <p>Miembros asignados: {detail.members?.length ?? 0}</p>
+              <ProjectDetailPanel
+                detail={detail}
+                editForm={editForm}
+                onEditChange={setEditForm}
+                onSave={handleSaveProject}
+                saving={saving}
+              />
+            )}
+
+            {tasksStub.length > 0 && (
+              <section className="panel tasks-stub-panel">
+                <h2>Tareas (stub BFF – EV3)</h2>
+                <ul className="tasks-stub-list">
+                  {tasksStub.map((t) => (
+                    <li key={t.id}>
+                      <strong>{t.title}</strong>
+                      <span className={`badge badge--${String(t.status).toLowerCase()}`}>{t.status}</span>
+                    </li>
+                  ))}
+                </ul>
               </section>
             )}
           </>

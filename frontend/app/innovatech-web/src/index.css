@@ -358,3 +358,40 @@ input:focus, textarea:focus, select:focus {
   line-height: 1;
   padding: 0;
 }
+
+.detail-panel { margin-top: 1.5rem; }
+.detail-description { color: var(--text-muted); margin: 0.5rem 0 1rem; }
+.member-detail-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+}
+.member-detail-item {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: center;
+}
+.edit-form { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+.member-filter-hint {
+  font-size: 0.85rem;
+  color: var(--accent);
+  margin: 0.5rem 0;
+}
+.tasks-stub-panel { margin-top: 1.5rem; }
+.tasks-stub-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.tasks-stub-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.badge--done { background: #d1fae5; color: #065f46; }
+.badge--pending { background: #f3f4f6; color: #4b5563; }
