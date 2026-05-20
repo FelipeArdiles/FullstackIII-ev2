@@ -1,10 +1,12 @@
-# Documentos de contexto / instrucciones (no subir a GitHub)
+# Documentos de contexto / instrucciones del curso (no subir a GitHub)
 *.pdf
+!docs/*.pdf
 *.docx
 *.doc
 
 # Entorno Python local para extracción de documentos
 .venv/
+scripts/.venv-pdf/
 
 # Node
 node_modules/

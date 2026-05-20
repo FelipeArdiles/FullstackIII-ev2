@@ -4,8 +4,15 @@
   "description": "Botón reutilizable Innovatech",
   "type": "module",
   "main": "src/index.js",
+  "peerDependencies": {
+    "react": "^18.0.0"
+  },
   "scripts": {
     "test": "node --test test/*.test.js"
+  },
+  "devDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "keywords": ["innovatech", "ui", "button"]
 }

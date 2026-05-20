@@ -5,6 +5,6 @@ spring:
     name: bff-innovatech
 services:
   proyectos:
-    url: http://localhost:8081
+    url: ${SERVICES_PROYECTOS_URL:http://localhost:8081}
   recursos:
-    url: http://localhost:8082
+    url: ${SERVICES_RECURSOS_URL:http://localhost:8082}

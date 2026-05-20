@@ -11,4 +11,4 @@ spring:
       ddl-auto: update
 services:
   proyectos:
-    url: http://localhost:8081
+    url: ${SERVICES_PROYECTOS_URL:http://localhost:8081}

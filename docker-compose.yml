@@ -1,0 +1,77 @@
+# Imágenes base multi-arch (linux/amd64, linux/arm64). No forzar platform salvo
+# depuración; en Apple Silicon se usa arm64 nativo, en PCs x86_64/amd64.
+services:
+  ms-proyectos:
+    build:
+      context: ./backend/ms-proyectos
+    container_name: ms-proyectos
+    ports:
+      - "8081:8081"
+    networks:
+      - innovatech-net
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8081/api/projects"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  ms-recursos:
+    build:
+      context: ./backend/ms-recursos
+    container_name: ms-recursos
+    ports:
+      - "8082:8082"
+    environment:
+      SERVICES_PROYECTOS_URL: http://ms-proyectos:8081
+    depends_on:
+      ms-proyectos:
+        condition: service_healthy
+    networks:
+      - innovatech-net
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8082/api/members"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  bff:
+    build:
+      context: ./backend/bff
+    container_name: bff
+    ports:
+      - "8080:8080"
+    environment:
+      SERVICES_PROYECTOS_URL: http://ms-proyectos:8081
+      SERVICES_RECURSOS_URL: http://ms-recursos:8082
+    depends_on:
+      ms-proyectos:
+        condition: service_healthy
+      ms-recursos:
+        condition: service_healthy
+    networks:
+      - innovatech-net
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/api/bff/projects"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/app/innovatech-web/Dockerfile
+    container_name: innovatech-web
+    ports:
+      - "5173:80"
+    depends_on:
+      bff:
+        condition: service_healthy
+    networks:
+      - innovatech-net
+
+networks:
+  innovatech-net:
+    driver: bridge

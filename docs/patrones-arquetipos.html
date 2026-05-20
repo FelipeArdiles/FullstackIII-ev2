@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>Patrones Arquetipos</title>
+<style>
+body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; line-height: 1.5; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #ccc; padding: 0.4rem; }
+h1 { color: #0f3460; }
+</style></head><body><h1>Análisis de Patrones y Arquetipos – Innovatech Solutions EV2</h1>
+<h2>Contexto</h2>
+<p>Innovatech Solutions requiere una plataforma de gestión de proyectos con microservicios, BFF y frontend modular.</p>
+<h2>Patrones de diseño implementados</h2>
+<table>
+<thead>
+<tr>
+<th>Patrón</th>
+<th>Componente</th>
+<th>Problema que resuelve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Repository</strong></td>
+<td>ms-proyectos, ms-recursos</td>
+<td>Desacopla lógica de negocio de JPA/Hibernate</td>
+</tr>
+<tr>
+<td><strong>Factory Method</strong></td>
+<td><code>ProjectFactory</code>, <code>PlannedProjectCreator</code>, <code>InProgressProjectCreator</code></td>
+<td>Creación de proyectos según estado inicial sin acoplar el servicio a constructores concretos</td>
+</tr>
+<tr>
+<td><strong>Strategy</strong></td>
+<td><code>StandardCapacityStrategy</code>, <code>SeniorCapacityStrategy</code></td>
+<td>Cálculo de capacidad variable según rol del recurso</td>
+</tr>
+<tr>
+<td><strong>Adapter</strong></td>
+<td><code>ProjectClientAdapter</code></td>
+<td>Integración REST con ms-proyectos sin exponer detalles HTTP al dominio de recursos</td>
+</tr>
+<tr>
+<td><strong>Facade</strong></td>
+<td><code>InnovatechFacade</code> (BFF)</td>
+<td>Interfaz única y simplificada para el frontend sobre múltiples microservicios</td>
+</tr>
+<tr>
+<td><strong>Observer</strong></td>
+<td><code>ProjectSelectionSubject</code> (NPM)</td>
+<td>Notificación reactiva al seleccionar un proyecto en la UI</td>
+</tr>
+<tr>
+<td><strong>Composite</strong></td>
+<td><code>CompositeForm</code>, <code>FormField</code> (NPM)</td>
+<td>Validación uniforme de formularios compuestos</td>
+</tr>
+</tbody>
+</table>
+<h2>Arquetipos y arquitectura</h2>
+<table>
+<thead>
+<tr>
+<th>Arquetipo / patrón arquitectónico</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Microservicios</strong></td>
+<td>ms-proyectos, ms-recursos (dominios separados, BD H2 independiente)</td>
+</tr>
+<tr>
+<td><strong>BFF</strong></td>
+<td>Agregación orientada al frontend, sin lógica de negocio compleja</td>
+</tr>
+<tr>
+<td><strong>API REST</strong></td>
+<td>Comunicación JSON entre capas</td>
+</tr>
+<tr>
+<td><strong>Arquetipos Maven</strong></td>
+<td><code>innovatech-ms-archetype</code>, <code>innovatech-bff-archetype</code> para estandarizar nuevos servicios</td>
+</tr>
+<tr>
+<td><strong>Monorepo</strong></td>
+<td>Un repositorio con componentes versionados por carpeta (enlaces en <code>repositorios.txt</code>)</td>
+</tr>
+</tbody>
+</table>
+<h2>Justificación</h2>
+<ul>
+<li><strong>Factory Method</strong>: el caso exige creación de proyectos con estados distintos (PLANNED, IN_PROGRESS).</li>
+<li><strong>Facade en BFF</strong>: el alcance pide combinar proyectos, tareas y equipos; aquí se combinan proyecto + miembros + KPI de capacidad.</li>
+<li><strong>Strategy</strong>: la EV2 Parcial 2 enfatiza visualizar <strong>capacity</strong> de recursos; roles senior pueden tener reglas distintas.</li>
+<li><strong>Observer / Composite en NPM</strong>: cumplen el requisito de componentes frontend reutilizables con patrones explícitos.</li>
+</ul>
+<h2>Supuestos</h2>
+<ul>
+<li>Microservicio de <strong>tareas</strong> se deja para EV3; EV2 implementa <strong>proyectos + recursos (capacity)</strong> según instrucciones del Parcial 2 del caso semestral.</li>
+<li>BD H2 en memoria para desarrollo y demostración académica.</li>
+</ul></body></html>

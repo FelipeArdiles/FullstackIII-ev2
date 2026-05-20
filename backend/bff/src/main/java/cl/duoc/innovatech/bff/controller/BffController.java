@@ -41,4 +41,14 @@ public class BffController {
     public Map<String, Object> createMember(@RequestBody Map<String, Object> body) {
         return facade.createMember(body);
     }
+
+    @PutMapping("/projects/{id}")
+    public Map<String, Object> updateProject(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        return facade.updateProject(id, body);
+    }
+
+    @GetMapping("/tasks")
+    public List<Map<String, Object>> tasksStub() {
+        return facade.listTasksStub();
+    }
 }

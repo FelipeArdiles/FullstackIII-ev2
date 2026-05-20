@@ -46,7 +46,37 @@ Documentación: [docs/patrones-arquetipos.md](docs/patrones-arquetipos.md).
 - Maven 3.9+
 - Node.js 18+
 
-## Ejecución rápida
+## Ejecución con Docker Compose
+
+Requisito: [Docker](https://docs.docker.com/get-docker/) y Docker Compose v2.
+
+```bash
+# Desde la raíz del repositorio
+docker compose up --build
+
+# Alternativa con script
+chmod +x start.sh && ./start.sh
+```
+
+| Servicio | URL en el host |
+|----------|----------------|
+| Frontend (React + nginx) | http://localhost:5173 |
+| BFF | http://localhost:8080 |
+| ms-proyectos | http://localhost:8081 |
+| ms-recursos | http://localhost:8082 |
+
+El frontend sirve la SPA en el puerto **5173** y hace proxy de `/api` al BFF dentro de la red Docker. El BFF se conecta a los microservicios por hostname (`ms-proyectos`, `ms-recursos`). Las bases H2 siguen en memoria dentro de cada MS.
+
+**Troubleshooting breve**
+
+- Puerto ocupado: detener procesos locales en 8080–8082 o 5173, o cambiar el mapeo en `docker-compose.yml`.
+- BFF no arranca: esperar healthchecks de los MS (`docker compose ps`).
+- Rebuild limpio: `docker compose down -v && docker compose up --build`.
+- **Apple Silicon (Mac M1/M2/M3, arm64):** los Dockerfiles usan imágenes con soporte `linux/arm64` y `linux/amd64` (`eclipse-temurin:17-jre`, `maven:3.9-eclipse-temurin-17`, `node:18-alpine`, `nginx:alpine`). Evita variantes `*-alpine` de Temurin en runtime Java; no suelen publicar manifiesto arm64. Si ves `no matching manifest for linux/arm64`, actualiza el repo y reconstruye: `docker compose build --no-cache`.
+- **Windows / Linux x86_64 (amd64):** el mismo `docker compose up --build` descarga capas amd64 automáticamente. No hace falta `platform: linux/amd64` salvo que quieras forzar emulación en Mac (más lento).
+- Verificar arquitectura de una imagen: `docker image inspect eclipse-temurin:17-jre --format '{{.Architecture}}'`.
+
+## Ejecución rápida (local sin Docker)
 
 ### Backend
 
@@ -87,6 +117,24 @@ cd backend/ms-proyectos && mvn test
 cd backend/ms-recursos && mvn test
 cd backend/bff && mvn test
 cd frontend/packages/ui-project-card && npm test
+cd frontend/packages/ui-button && npm test
+cd frontend/app/innovatech-web && npm test
+```
+
+## Cobertura de código (JaCoCo)
+
+Cada backend Maven genera reporte HTML tras `mvn test`:
+
+| Módulo | Reporte |
+|--------|---------|
+| ms-proyectos | `backend/ms-proyectos/target/site/jacoco/index.html` |
+| ms-recursos | `backend/ms-recursos/target/site/jacoco/index.html` |
+| bff | `backend/bff/target/site/jacoco/index.html` |
+
+```bash
+cd backend/ms-proyectos && mvn test jacoco:report
+cd backend/ms-recursos && mvn test jacoco:report
+cd backend/bff && mvn test jacoco:report
 ```
 
 ## Autor

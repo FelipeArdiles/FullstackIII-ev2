@@ -1,13 +1,62 @@
-Repositorio principal (monorepo)
-https://github.com/FelipeArdiles/FullstackIII-ev2
-Contiene todos los componentes: arquetipos, backend, frontend y documentación.
+# Innovatech Solutions EV2 – Repositorios y componentes
+# Autor: FelipeArdiles | Curso: Fullstack III DSY1106
 
-Componentes (rutas dentro del monorepo)
-- Arquetipos Maven: /archetypes/innovatech-ms-archetype y /archetypes/innovatech-bff-archetype
-- Microservicio Proyectos: /backend/ms-proyectos
-- Microservicio Recursos: /backend/ms-recursos
-- BFF: /backend/bff
-- Paquetes NPM: /frontend/packages/ui-button, ui-project-card, ui-capacity-form
-- App React: /frontend/app/innovatech-web
+================================================================================
+REPOSITORIO PRINCIPAL (MONOREPO)
+================================================================================
+URL GitHub : https://github.com/FelipeArdiles/FullstackIII-ev2
+Rama estable: main
+Rama integración: develop
+Descripción: Monorepo con arquetipos Maven, microservicios Spring Boot, BFF,
+             paquetes NPM reutilizables y aplicación React Innovatech Web.
 
-Nota: La evaluación permite repositorios separados por componente; este proyecto usa monorepo con carpetas independientes y README por módulo para facilitar la entrega académica individual.
+================================================================================
+COMPONENTES BACKEND (Java 17 / Spring Boot 3.3)
+================================================================================
+| Componente           | Ruta en monorepo              | Puerto | Descripción                                      |
+|----------------------|-------------------------------|--------|--------------------------------------------------|
+| ms-proyectos         | /backend/ms-proyectos         | 8081   | CRUD proyectos, Factory Method, Repository, H2   |
+| ms-recursos          | /backend/ms-recursos          | 8082   | Miembros, capacity Strategy, Adapter a proyectos |
+| bff-innovatech       | /backend/bff                  | 8080   | Facade REST para frontend, agrega proyectos+recursos |
+
+================================================================================
+COMPONENTES FRONTEND (React 18 / Vite)
+================================================================================
+| Componente           | Ruta en monorepo                        | Descripción                           |
+|----------------------|-----------------------------------------|---------------------------------------|
+| innovatech-web       | /frontend/app/innovatech-web            | SPA principal, dashboard, formularios |
+| @innovatech/ui-button| /frontend/packages/ui-button            | Botón reutilizable (variantes)        |
+| @innovatech/ui-project-card | /frontend/packages/ui-project-card | Observer selección de proyecto        |
+| @innovatech/ui-capacity-form  | /frontend/packages/ui-capacity-form  | Composite form + capacity badge       |
+
+================================================================================
+ARQUETIPOS MAVEN
+================================================================================
+| Arquetipo                  | Ruta                                      | groupId:artifactId                    |
+|----------------------------|-------------------------------------------|---------------------------------------|
+| Microservicio base         | /archetypes/innovatech-ms-archetype       | cl.duoc.innovatech:innovatech-ms-archetype |
+| BFF base                   | /archetypes/innovatech-bff-archetype      | cl.duoc.innovatech:innovatech-bff-archetype |
+
+================================================================================
+DOCUMENTACIÓN DE ENTREGA EV2
+================================================================================
+| Documento              | Markdown                          | PDF (generado)                    |
+|------------------------|-----------------------------------|-----------------------------------|
+| Patrones y arquetipos  | /docs/patrones-arquetipos.md      | /docs/patrones-arquetipos.pdf     |
+| Plan de branching      | /docs/plan-branching.md           | /docs/plan-branching.pdf          |
+| README principal       | /README.md                        | —                                 |
+
+Generar PDFs: ./scripts/generate-pdfs.sh
+
+================================================================================
+INFRAESTRUCTURA
+================================================================================
+Docker Compose (raíz): docker-compose.yml
+Orquesta: ms-proyectos, ms-recursos, bff, frontend (nginx :5173)
+
+================================================================================
+NOTA ACADÉMICA
+================================================================================
+La rúbrica permite repositorios separados por componente; este proyecto usa
+monorepo con carpetas independientes y README por módulo. Todas las URLs y
+rutas anteriores apuntan al mismo repositorio GitHub.

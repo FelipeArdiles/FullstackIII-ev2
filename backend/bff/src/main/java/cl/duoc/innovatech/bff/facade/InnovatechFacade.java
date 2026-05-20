@@ -77,4 +77,22 @@ public class InnovatechFacade {
                 .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
                 .block();
     }
+
+    public Map<String, Object> updateProject(Long id, Map<String, Object> body) {
+        return proyectosClient.put()
+                .uri("/api/projects/{id}", id)
+                .bodyValue(body)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                .block();
+    }
+
+    /** Stub EV2: tareas completas en EV3. */
+    public List<Map<String, Object>> listTasksStub() {
+        return List.of(
+                Map.of("id", 1, "title", "Definir arquitectura BFF", "status", "DONE", "projectId", 1),
+                Map.of("id", 2, "title", "Integrar capacity dashboard", "status", "IN_PROGRESS", "projectId", 1),
+                Map.of("id", 3, "title", "Microservicio de tareas (EV3)", "status", "PENDING", "projectId", null)
+        );
+    }
 }
