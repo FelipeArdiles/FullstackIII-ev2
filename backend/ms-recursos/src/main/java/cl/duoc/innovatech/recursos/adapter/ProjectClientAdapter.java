@@ -1,5 +1,6 @@
 package cl.duoc.innovatech.recursos.adapter;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -12,8 +13,9 @@ public class ProjectClientAdapter {
 
     private final RestClient restClient;
 
+    @Autowired
     public ProjectClientAdapter(@Value("${services.proyectos.url}") String baseUrl) {
-        this(RestClient.builder().baseUrl(baseUrl).build());
+        this.restClient = RestClient.builder().baseUrl(baseUrl).build();
     }
 
     /** Constructor para pruebas unitarias con RestClient inyectado. */
